@@ -150,6 +150,22 @@ footer{color:var(--muted);font-size:.85rem;padding:10px 0 40px}
 .zjb{display:inline-block;background:var(--gold);color:#2A1E00;font-weight:700;font-size:.75rem;padding:1px 8px;border-radius:999px;margin:2px 4px 2px 0}
 .qm-cell .gx{color:var(--teal);font-size:.75rem;line-height:1.35;margin-top:2px}
 #qmTbl tr.closed td{opacity:.55}
+.qmlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-width:640px}
+.qmlist li{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:8px 12px;border-radius:10px;border:1px solid transparent}
+.qmlist .hz{font-weight:900;font-size:1.2rem;line-height:1.1;text-align:center}
+.qmlist .hz small{display:block;font-weight:400;font-size:.68rem;color:var(--muted);font-family:"Oswald",sans-serif}
+.qmlist .w{font-weight:700;line-height:1.35}
+.qmlist .w span{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.qmlist .sc{font-family:"Oswald",sans-serif;font-size:1.1rem;color:var(--red);display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.qmlist .medal{font-family:"Noto Sans TC",sans-serif;font-size:.68rem;font-weight:700;color:#fff;padding:0 7px;border-radius:999px;line-height:1.6}
+.qmlist li.r1{background:color-mix(in srgb,var(--gold) 18%,transparent);border-color:var(--gold)} .qmlist li.r1 .medal{background:var(--gold)}
+.qmlist li.r2{background:color-mix(in srgb,var(--teal) 14%,transparent);border-color:var(--teal)} .qmlist li.r2 .medal{background:var(--teal)}
+.qmlist li.r3{background:color-mix(in srgb,var(--red) 10%,transparent);border-color:var(--red)} .qmlist li.r3 .medal{background:var(--red)}
+.qmlist li.none .w,.qmlist li.none .sc{color:var(--muted);font-weight:500}
+.qmlist li.out{opacity:.45}
+.nowtag{font-style:normal;font-size:.68rem;font-weight:700;color:#fff;background:var(--red);border-radius:999px;padding:0 6px;margin-left:6px;vertical-align:2px}
+.ranklegend{display:flex;gap:12px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin:0 0 10px}
+.ranklegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 </style>
 </head>
 <body>
@@ -194,29 +210,6 @@ footer{color:var(--muted);font-size:.85rem;padding:10px 0 40px}
       </div>
       <div class="detail" id="detail"></div>
     </div>
-  </section>
-
-  <section class="block" id="sec-dist">
-    <h2>開獎型態分布</h2>
-    <p class="lede">把歷史開獎的奇偶、大小、總和、連號拿來和純數學計算出的理論機率比對。兩者幾乎重疊，表示這些「型態」是隨機抽出時自然會有的樣子。</p>
-    <div class="key"><span style="--c:var(--red)">實際開獎</span><span style="--c:var(--teal)">理論機率</span></div>
-    <div class="cols" id="dist"></div>
-  </section>
-
-  <section class="block" id="sec-fair">
-    <h2>公平性檢定</h2>
-    <p class="lede">卡方檢定用來判斷各號碼的出現次數是否均勻。p 值大於 0.05，代表觀察到的差異完全可以用隨機波動解釋。</p>
-    <div class="verdict" id="fair"></div>
-  </section>
-
-  <section class="block" id="sec-bt">
-    <h2>預測策略回測</h2>
-    <p class="lede">讓每種常見的「預測法」每期只用當期以前的資料選號，跑遍全部歷史，再看平均命中幾個號碼。和理論值的差距若在 ±2 個標準誤之內，就代表這個策略跟亂選沒有差別。</p>
-    <div class="controls">
-      <label>參考最近 <select id="btWin"><option>30</option><option selected>50</option><option>100</option><option>300</option></select> 期資料選號</label>
-    </div>
-    <div class="tbl-wrap"><table id="bt"></table></div>
-    <p class="lede" id="btNote" style="margin-top:14px;margin-bottom:0"></p>
   </section>
 
   <section class="block" id="sec-gen">
@@ -269,21 +262,15 @@ footer{color:var(--muted);font-size:.85rem;padding:10px 0 40px}
 
   <section class="block" id="sec-qm">
     <h2>奇門擇時</h2>
-    <p class="lede">依陽盤時家奇門（轉盤、置閏法）排出每天 12 個時辰的盤局，判斷各宮吉格並評出最佳方位，作為購買彩券的時間與方向參考。這是傳統文化的趣味應用，不會改變開獎機率。</p>
+    <p class="lede">依陽盤時家奇門（轉盤、置閏法）列出每個時辰的最吉方：休、生、開、景門，且無伏吟、反吟、擊刑、白虎、空亡、門迫、門制、五不遇。作為購買彩券的時間與方向參考。這是傳統文化的趣味應用，不會改變開獎機率。</p>
     <div class="controls">
       <label>日期 <input type="date" id="qmDate"></label>
       <div class="chips" id="qmNext" role="group" aria-label="近期開獎日"></div>
     </div>
     <div class="detail" id="qmDay" style="margin-bottom:16px"></div>
-    <div class="qm-wrap">
-      <div class="tbl-wrap"><table id="qmTbl"></table></div>
-      <div>
-        <div id="qmHead" style="font-weight:700;margin-bottom:8px"></div>
-        <div class="qm-grid" id="qmGrid"></div>
-        <p class="note" style="font-size:.82rem;color:var(--muted);margin:8px 0 0">上方為南、下方為北（傳統方位圖）。每格依序為天盤／地盤干、九星、八門、八神、吉格。</p>
-        <div class="detail" id="qmGe" style="margin-top:14px"></div>
-      </div>
-    </div>
+    <label class="toggle" style="display:flex;gap:8px;align-items:center;font-size:.88rem;color:var(--muted);margin:0 0 6px"><input type="checkbox" id="qmOpen"> 前三吉只從彩券行營業時段（07:00–21:00）挑選</label>
+    <div class="ranklegend"><span><i style="background:var(--gold)"></i>第一吉</span><span><i style="background:var(--teal)"></i>第二吉</span><span><i style="background:var(--red)"></i>第三吉</span></div>
+    <ol class="qmlist" id="qmList"></ol>
   </section>
 
   <section class="block" id="sec-hist">
@@ -526,13 +513,12 @@ function renderWinOpts(){
   const opts=[['all','全部（2008 年起）'],['500','最近 500 期'],['100','最近 100 期'],['30','最近 30 期']];
   $('#win').innerHTML=opts.map(([v,t])=>`<option value="${v}" ${S.win===v?'selected':''}>${t}</option>`).join('');
 }
-function renderAll(){D=draws(S.g);renderWinOpts();renderHero();renderHeat();renderDist();renderFair();renderBacktest();renderPicker();$('#tickets').innerHTML='';renderWheel(true);renderQM();renderHist()}
+function renderAll(){D=draws(S.g);renderWinOpts();renderHero();renderHeat();renderPicker();$('#tickets').innerHTML='';renderWheel(true);renderQM();renderHist()}
 
 document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{S.g=b.dataset.g;S.sel=null;S.pick={};document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderAll()});
-$('#win').onchange=e=>{S.win=e.target.value;renderHeat();renderDist();renderFair()};
+$('#win').onchange=e=>{S.win=e.target.value;renderHeat()};
 document.querySelectorAll('.chip[data-m]').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;document.querySelectorAll('.chip[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderHeat()});
 $('#heat').onclick=e=>{const c=e.target.closest('.cell');if(!c)return;const n=+c.dataset.n;S.sel=S.sel===n?null:n;renderHeat()};
-$('#btWin').onchange=renderBacktest;
 $('#picker').onclick=e=>{const b=e.target.closest('button');if(!b)return;const n=b.dataset.n,cur=S.pick[n];S.pick[n]=cur==='in'?'out':cur==='out'?undefined:'in';if(!S.pick[n])delete S.pick[n];b.dataset.s=S.pick[n]||''};
 $('#genBtn').onclick=genTickets;
 $('#q').oninput=renderHist;
@@ -615,7 +601,7 @@ function runWheel(){
     $('#wOut').innerHTML=`
      <div class="verdict" style="margin-top:20px"><div><div class="p">${fmt(nT)} 注</div><div style="color:var(--muted);font-size:.85rem;margin-top:6px">每期 NT$ ${fmt(cost)}${G.zone2?`（第一區 ${tickets.length} 組 × 第二區 ${z2.length} 個）`:''}</div></div>
      <div>${t==='all'?'全包':'比全包少了 '+fmt(C(W.M,G.k)*z2.length-nT)+' 注'}。<br>歷史回測 ${fmt(T)} 期：觸發保證 ${t==='all'?'—':fmt(trig)+' 次，每次都兌現（'+trigOk+'/'+trig+'）'}；平均每期中 ${G.hitT} 個號碼以上的注數為 <b class="num">${(win/T).toFixed(3)}</b>，和隨便選 ${fmt(nT)} 注的理論值 <b class="num">${(nT*q).toFixed(3)}</b> 相當。</div></div>
-     <p class="lede" style="margin:14px 0 0">包牌改變的是「中獎集中在哪幾期」，不會改變長期平均能中幾注。${W.src==='hot'||W.src==='cold'?'熱號、冷號作為號碼來源，在上方回測中與隨機選號沒有差別。':''}</p>
+     <p class="lede" style="margin:14px 0 0">包牌改變的是「中獎集中在哪幾期」，不會改變長期平均能中幾注。${W.src==='hot'||W.src==='cold'?'熱號、冷號只是號碼來源，不會提高中獎機率。':''}</p>
      <div class="tickets">${show.map((tk,i)=>`<div class="ticket"><span class="idx">${i+1}</span>${tk.map(x=>`<span class="ball">${x}</span>`).join('')}${G.zone2?`<span class="plus">+</span>${z2.map(z=>`<span class="ball sp" style="width:34px;height:34px;font-size:1rem">${z}</span>`).join('')}`:''}</div>`).join('')}</div>
      ${tickets.length>200?`<p style="color:var(--muted)">只列出前 200 組，共 ${fmt(tickets.length)} 組。</p>`:''}
      <div class="controls" style="margin-top:14px"><button class="btn ghost" id="wCopy">複製全部號碼</button><span id="wCopied" style="color:var(--muted)"></span></div>`;
@@ -742,42 +728,35 @@ const isoLocal=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-
 const toScore=s=>Math.max(0,Math.round(s/2));
 function renderQM(reset){
   const today=new Date();
-  if(reset||!QS.date){QS.date=isoLocal(today);QS.hb=null}
+  if(reset||!QS.date){QS.date=isoLocal(today)}
   $('#qmDate').value=QS.date;
   const nd=[];const t=new Date(today);for(let i=0;i<14&&nd.length<3;i++){if(DRAWDAY[S.g].includes(t.getDay())&&!(i===0&&today.getHours()>=20))nd.push(isoLocal(t));t.setDate(t.getDate()+1)}
   const wk='日一二三四五六';
   $('#qmNext').innerHTML=nd.map(d=>`<button class="chip" data-d="${d}" aria-pressed="${d===QS.date}">${d.slice(5).replace('-','/')}（${wk[new Date(d+'T12:00').getDay()]}）開獎</button>`).join('');
   const [y,m,d]=QS.date.split('-').map(Number);
   const rows=HOURS.map(hb=>({hb,c:QM.chart(y,m,d,hb)}));
-  if(!rows[0].c){$('#qmDay').innerHTML='這個日期超出可排盤的範圍（約 1996–2050 年），請換一天。';$('#qmTbl').innerHTML='';$('#qmGrid').innerHTML='';$('#qmHead').textContent='';return}
-  const open=rows.filter(r=>OPEN.has(r.hb));
-  const top=open.slice().sort((a,b)=>b.c.best.ss-a.c.best.ss||a.hb-b.hb)[0];
-  const zjc=[];open.forEach(r=>r.c.zuiji.forEach(x=>zjc.push({hb:r.hb,c:r.c,x})));zjc.sort((a,b)=>b.x.ss-a.x.ss||a.hb-b.hb);
-  const zjTop=zjc[0];
-  if(QS.hb==null)QS.hb=top.hb;
-  const dow=new Date(QS.date+'T12:00').getDay(),G=GAMES[S.g],draw=DRAWDAY[S.g].includes(dow),c0=rows[4].c;
-  $('#qmDay').innerHTML=`<b>${QS.date}（${wk[dow]}）</b>　日柱 ${c0.dayGZ}，${c0.term}${c0.yang?'陽':'陰'}遁 ${c0.ju} 局（${c0.yuan}元，置閏法）<br>
+  if(!rows[0].c){$('#qmDay').innerHTML='這個日期超出可排盤的範圍（約 1996–2050 年），請換一天。';$('#qmList').innerHTML='';return}
+  const openOnly=$('#qmOpen').checked;
+  const hrs=rows.map(r=>({...r,top:r.c.zuiji[0]||null,inScope:!openOnly||OPEN.has(r.hb)}));
+  const ranked=hrs.filter(h=>h.top&&h.inScope).sort((a,b)=>b.top.ss-a.top.ss||a.hb-b.hb).slice(0,3);
+  const rankOf=new Map(ranked.map((h,i)=>[h.hb,i+1]));
+  const now=new Date(),nowD=isoLocal(now.getHours()===23?new Date(now.getTime()+3600000):now),nowHb=Math.floor(((now.getHours()+1)%24)/2);
+  const dow=new Date(QS.date+'T12:00').getDay(),G=GAMES[S.g],draw=DRAWDAY[S.g].includes(dow),c0=rows[6].c,r1=ranked[0];
+  $('#qmDay').innerHTML=`<b>${QS.date}（${wk[dow]}）</b>　日柱 ${c0.dayGZ}，${c0.term}${c0.yang?'陽':'陰'}遁 ${c0.ju} 局（${c0.yuan}元）<br>
    ${draw?`這天是${G.name}開獎日，當天晚上 8 點左右停止投注，以彩券行公告為準。`:`這天${G.name}不開獎，買的彩券會對下一個開獎日。`}
-   <br>${zjTop?`<span class="zjb">最吉</span> <b>${QM.ZHI[zjTop.hb]}時（${hrTxt(zjTop.hb)}）往${zjTop.x.dir}方</b>，${zjTop.x.door}，無伏吟、反吟、擊刑、白虎、空亡、門迫、門制、五不遇。${zjc.length>1?`<br>其他最吉：${zjc.slice(1,5).map(z=>`${QM.ZHI[z.hb]}時${z.x.dir}方`).join('、')}`:''}`:'今日營業時段沒有通過全部凶格篩選的最吉方。'}
-   <br>分數最高：${QM.ZHI[top.hb]}時往${top.c.best.dir}方，${top.c.best.door}${top.c.best.ge.length?'，'+top.c.best.ge.slice(0,3).join('、'):''}。`;
-  $('#qmTbl').innerHTML=`<tr><th>時辰</th><th style="text-align:left">最佳方位</th><th style="text-align:left">吉格</th><th>分數</th></tr>`+rows.map(({hb,c})=>{
-    const b=c.best,s2=c.second;
-    return `<tr data-hb="${hb}" class="${hb===QS.hb?'on':''} ${hb===top.hb?'top':''} ${OPEN.has(hb)?'':'closed'}" tabindex="0"><td>${c.hourGZ}時<br><span class="num" style="color:var(--muted);font-size:.85rem">${hrTxt(hb)}</span></td>
-     <td class="dir" style="text-align:left">${b.dir}方<br><span style="font-weight:400;font-size:.8rem;color:var(--muted)">${b.door}・次選${s2.dir}</span></td>
-     <td style="text-align:left">${c.zuiji.length?`<span class="zjb">最吉 ${c.zuiji.map(z=>z.dir+z.door[0]).join('・')}</span>`:''}${b.ge.length?b.ge.map(x=>`<span class="tag">${x}</span>`).join(''):'<span class="tag" style="color:var(--muted)">無</span>'}</td>
-     <td class="num">${Math.round(b.ss)}</td></tr>`}).join('');
-  const c=rows.find(r=>r.hb===QS.hb).c,order=[4,9,2,3,5,7,8,1,6];
-  $('#qmHead').textContent=`${c.hourGZ}時盤　旬首 ${c.xun}，空亡 ${c.kong}，值符 ${c.zhiFu}，值使 ${c.zhiShi}${c.wbu?'，五不遇時':''}`;
-  const byP={};c.pals.forEach(p=>byP[p.p]=p);
-  $('#qmGrid').innerHTML=order.map(p=>p===5?`<div class="qm-cell"><div class="d">中宮</div><div class="s">地 ${c.di[5]}</div></div>`:(()=>{const x=byP[p];
-    return `<div class="qm-cell ${p===c.best.p?'pick':''}"><div class="d">${x.dir}・${x.gua}</div><div class="s">${x.t}／${x.d}</div><div>${x.star}</div><div class="${['生門','開門','休門'].includes(x.door)?'g':['死門','驚門','傷門'].includes(x.door)?'bd':''}">${x.door}</div><div style="color:var(--muted)">${x.god}</div>${x.zj?'<div class="zjb" style="margin-top:3px">★最吉方</div>':''}${x.ge.length?`<div class="gx">${x.ge.filter(g=>!['三勝宮','五不擊','天輔時'].includes(g)).join(' ')}</div>`:''}</div>`})()).join('');
-  const b=c.best;
-  $('#qmGe').innerHTML=b.ge.length?`<b>${b.dir}方的吉格</b><dl>${b.ge.map(g=>`<dt>${g}</dt><dd style="font-family:inherit;font-size:.9rem">${QM.GEDESC[g]||''}</dd>`).join('')}</dl>`:`<b>${b.dir}方</b><p style="margin:6px 0 0">此時辰最佳方位沒有成格，屬於門、神、干條件相對較好的方位。</p>`;
+   <br>${r1?`<span class="zjb">第一吉</span> <b>${QM.ZHI[r1.hb]}時（${hrTxt(r1.hb)}）往${r1.top.dir}方</b>，${r1.top.door}。`:`${openOnly?'營業時段':'今天'}沒有符合全部條件的最吉方。`}`;
+  $('#qmList').innerHTML=hrs.map(h=>{const r=rankOf.get(h.hb),x=h.top||h.c.best,isNow=nowD===QS.date&&nowHb===h.hb;
+    const others=h.c.zuiji.slice(1).map(z=>z.dir+z.door[0]).join('・');
+    const ge=h.top?h.top.ge.filter(g=>!['三勝宮','五不擊','天輔時'].includes(g)).slice(0,2).join('・'):'';
+    return `<li class="${r?'r'+r:''} ${h.top?'':'none'} ${h.inScope?'':'out'}">
+      <span class="hz">${QM.ZHI[h.hb]}<small>${hrTxt(h.hb)}</small></span>
+      <span class="w">${h.top?`往${x.dir}方・${x.door}`:'無最吉方'}${isNow?'<em class="nowtag">現在</em>':''}<span>${h.top?(ge||'')+(others?`${ge?'・':''}另：${others}`:''):`分數最高 ${x.dir}方・${x.door}`}</span></span>
+      <span class="sc">${r?`<b class="medal">第${r}</b>`:''}${Math.round(x.ss)}</span></li>`}).join('');
 }
+try{$('#qmOpen').checked=localStorage.getItem('qm_open')!=='0'}catch(e){$('#qmOpen').checked=true}
+$('#qmOpen').onchange=e=>{try{localStorage.setItem('qm_open',e.target.checked?'1':'0')}catch(err){}renderQM()};
 $('#qmDate').onchange=e=>{if(!e.target.value)return;QS.date=e.target.value;QS.hb=null;renderQM()};
 $('#qmNext').onclick=e=>{const b=e.target.closest('button');if(!b)return;QS.date=b.dataset.d;QS.hb=null;renderQM()};
-$('#qmTbl').onclick=e=>{const tr=e.target.closest('tr[data-hb]');if(!tr)return;QS.hb=+tr.dataset.hb;renderQM()};
-$('#qmTbl').onkeydown=e=>{if(e.key==='Enter'){const tr=e.target.closest('tr[data-hb]');if(tr){QS.hb=+tr.dataset.hb;renderQM()}}};
 renderAll();
 </script>
 </body>
